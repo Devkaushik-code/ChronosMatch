@@ -3,7 +3,9 @@
 import argparse
 import asyncio
 import json
+import platform
 import statistics
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,14 +15,27 @@ from chronosmatch.matching_engine import MatchingEngine
 
 
 def percentile(values, percentile_value):
+    """Calculate a percentile using linear interpolation."""
+    if not 0 <= percentile_value <= 100:
+        raise ValueError("percentile_value must be between 0 and 100")
+
     if not values:
         return 0
 
-    index = int((len(values) - 1) * percentile_value / 100)
-    return values[index]
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * percentile_value / 100
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    fraction = position - lower
+
+    return (
+        ordered[lower] * (1 - fraction)
+        + ordered[upper] * fraction
+    )
 
 
 async def benchmark(order_count: int = 10_000) -> dict:
+    """Benchmark order generation and matching."""
     if order_count < 0:
         raise ValueError("order_count cannot be negative")
 
@@ -43,7 +58,6 @@ async def benchmark(order_count: int = 10_000) -> dict:
         processed += 1
 
     elapsed_ns = time.perf_counter_ns() - start_ns
-    sorted_latencies = sorted(latencies_ns)
     elapsed_seconds = elapsed_ns / 1_000_000_000
 
     return {
@@ -58,20 +72,35 @@ async def benchmark(order_count: int = 10_000) -> dict:
             statistics.mean(latencies_ns) / 1000, 3
         ) if latencies_ns else 0,
         "p50_latency_us": round(
-            percentile(sorted_latencies, 50) / 1000, 3
+            percentile(latencies_ns, 50) / 1000, 3
         ),
         "p95_latency_us": round(
-            percentile(sorted_latencies, 95) / 1000, 3
+            percentile(latencies_ns, 95) / 1000, 3
         ),
         "p99_latency_us": round(
-            percentile(sorted_latencies, 99) / 1000, 3
+            percentile(latencies_ns, 99) / 1000, 3
         ),
     }
 
 
-async def run_repeated_benchmark(order_count: int, runs: int) -> dict:
+async def run_repeated_benchmark(
+    order_count: int,
+    runs: int,
+    warmup_runs: int = 1,
+) -> dict:
+    """Run warm-ups, then collect measured benchmark results."""
+    if order_count < 0:
+        raise ValueError("order_count cannot be negative")
+
     if runs < 1:
         raise ValueError("runs must be at least 1")
+
+    if warmup_runs < 0:
+        raise ValueError("warmup_runs cannot be negative")
+
+    for warmup_number in range(1, warmup_runs + 1):
+        await benchmark(order_count)
+        print(f"Warm-up {warmup_number}/{warmup_runs} complete")
 
     results = []
 
@@ -86,18 +115,31 @@ async def run_repeated_benchmark(order_count: int, runs: int) -> dict:
         )
 
     throughputs = [
-        result["throughput_orders_per_second"] for result in results
+        result["throughput_orders_per_second"]
+        for result in results
     ]
 
     return {
         "benchmark": "ChronosMatch Python matching engine",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "environment": {
+            "python_version": sys.version,
+            "python_implementation": platform.python_implementation(),
+            "platform": platform.platform(),
+            "machine": platform.machine(),
+            "processor": platform.processor() or "Not reported",
+        },
         "orders_per_run": order_count,
         "runs": runs,
+        "warmup_runs": warmup_runs,
+        "percentile_method": "Linear interpolation (inclusive endpoints)",
         "results": results,
         "summary": {
             "mean_throughput_orders_per_second": round(
                 statistics.mean(throughputs), 2
+            ),
+            "median_throughput_orders_per_second": round(
+                statistics.median(throughputs), 2
             ),
             "min_throughput_orders_per_second": min(throughputs),
             "max_throughput_orders_per_second": max(throughputs),
@@ -107,29 +149,52 @@ async def run_repeated_benchmark(order_count: int, runs: int) -> dict:
         },
         "notes": [
             "Single-process Python benchmark.",
+            "Warm-up runs are excluded from reported results.",
+            "Throughput includes order generation and matching.",
             "Matching latency measures submit_order only.",
+            "Percentiles use linear interpolation.",
             "Does not measure mmap IPC or prove zero-copy communication.",
+            "Results depend on the runtime environment and system load.",
         ],
     }
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Benchmark the ChronosMatch Python matching engine."
+    )
     parser.add_argument("--orders", type=int, default=100_000)
     parser.add_argument("--runs", type=int, default=5)
+    parser.add_argument("--warmup-runs", type=int, default=1)
     parser.add_argument(
         "--output",
         default="benchmarks/results.json",
     )
     args = parser.parse_args()
 
+    if args.orders < 0:
+        parser.error("--orders cannot be negative")
+
+    if args.runs < 1:
+        parser.error("--runs must be at least 1")
+
+    if args.warmup_runs < 0:
+        parser.error("--warmup-runs cannot be negative")
+
     report = asyncio.run(
-        run_repeated_benchmark(args.orders, args.runs)
+        run_repeated_benchmark(
+            args.orders,
+            args.runs,
+            args.warmup_runs,
+        )
     )
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(report, indent=2) + "\n")
+    output_path.write_text(
+        json.dumps(report, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     print("\nSummary:")
     print(json.dumps(report["summary"], indent=2))

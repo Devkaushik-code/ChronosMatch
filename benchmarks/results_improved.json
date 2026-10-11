@@ -1,0 +1,93 @@
+{
+  "benchmark": "ChronosMatch Python matching engine",
+  "timestamp_utc": "2026-10-11T14:49:34.244504+00:00",
+  "environment": {
+    "python_version": "3.12.15 (main, Oct  1 2026, 09:33:41) [GCC 14.2.0]",
+    "python_implementation": "CPython",
+    "platform": "Linux-5.15.194-android13-8-00019-gf4321180a397-ab15212794-aarch64-with",
+    "machine": "aarch64",
+    "processor": "Not reported"
+  },
+  "orders_per_run": 100000,
+  "runs": 5,
+  "warmup_runs": 1,
+  "percentile_method": "Linear interpolation (inclusive endpoints)",
+  "results": [
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 766.217,
+      "throughput_orders_per_second": 130511.3,
+      "average_matching_latency_us": 4.693,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.308,
+      "p99_latency_us": 12.308,
+      "run": 1
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 768.417,
+      "throughput_orders_per_second": 130137.65,
+      "average_matching_latency_us": 4.681,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.308,
+      "p99_latency_us": 12.308,
+      "run": 2
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 765.393,
+      "throughput_orders_per_second": 130651.76,
+      "average_matching_latency_us": 4.655,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.307,
+      "p99_latency_us": 12.308,
+      "run": 3
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 763.933,
+      "throughput_orders_per_second": 130901.51,
+      "average_matching_latency_us": 4.681,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.231,
+      "p99_latency_us": 12.077,
+      "run": 4
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 766.249,
+      "throughput_orders_per_second": 130505.91,
+      "average_matching_latency_us": 4.701,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.231,
+      "p99_latency_us": 12.077,
+      "run": 5
+    }
+  ],
+  "summary": {
+    "mean_throughput_orders_per_second": 130541.63,
+    "median_throughput_orders_per_second": 130511.3,
+    "min_throughput_orders_per_second": 130137.65,
+    "max_throughput_orders_per_second": 130901.51,
+    "stdev_throughput_orders_per_second": 247.81
+  },
+  "notes": [
+    "Single-process Python benchmark.",
+    "Warm-up runs are excluded from reported results.",
+    "Throughput includes order generation and matching.",
+    "Matching latency measures submit_order only.",
+    "Percentiles use linear interpolation.",
+    "Does not measure mmap IPC or prove zero-copy communication.",
+    "Results depend on the runtime environment and system load."
+  ]
+}

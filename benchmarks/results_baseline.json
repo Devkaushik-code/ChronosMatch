@@ -1,0 +1,79 @@
+{
+  "benchmark": "ChronosMatch Python matching engine",
+  "timestamp_utc": "2026-10-11T10:12:40.164174+00:00",
+  "orders_per_run": 100000,
+  "runs": 5,
+  "results": [
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 823.545,
+      "throughput_orders_per_second": 121426.2,
+      "average_matching_latency_us": 5.025,
+      "p50_latency_us": 3.0,
+      "p95_latency_us": 9.616,
+      "p99_latency_us": 16.923,
+      "run": 1
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 780.702,
+      "throughput_orders_per_second": 128089.91,
+      "average_matching_latency_us": 4.793,
+      "p50_latency_us": 2.77,
+      "p95_latency_us": 8.538,
+      "p99_latency_us": 12.923,
+      "run": 2
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 781.776,
+      "throughput_orders_per_second": 127913.89,
+      "average_matching_latency_us": 4.753,
+      "p50_latency_us": 2.846,
+      "p95_latency_us": 8.385,
+      "p99_latency_us": 12.616,
+      "run": 3
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 784.311,
+      "throughput_orders_per_second": 127500.39,
+      "average_matching_latency_us": 4.792,
+      "p50_latency_us": 2.846,
+      "p95_latency_us": 8.385,
+      "p99_latency_us": 12.692,
+      "run": 4
+    },
+    {
+      "orders_requested": 100000,
+      "orders_processed": 100000,
+      "trades_executed": 78862,
+      "elapsed_ms": 788.011,
+      "throughput_orders_per_second": 126901.71,
+      "average_matching_latency_us": 4.82,
+      "p50_latency_us": 2.846,
+      "p95_latency_us": 8.539,
+      "p99_latency_us": 12.923,
+      "run": 5
+    }
+  ],
+  "summary": {
+    "mean_throughput_orders_per_second": 126366.42,
+    "min_throughput_orders_per_second": 121426.2,
+    "max_throughput_orders_per_second": 128089.91,
+    "stdev_throughput_orders_per_second": 2503.73
+  },
+  "notes": [
+    "Single-process Python benchmark.",
+    "Matching latency measures submit_order only.",
+    "Does not measure mmap IPC or prove zero-copy communication."
+  ]
+}

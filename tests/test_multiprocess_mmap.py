@@ -1,7 +1,12 @@
 """Multiprocess producer-consumer correctness test for the mmap ring buffer."""
 
-import fcntl
 import multiprocessing as mp
+import unittest
+
+try:
+    import fcntl
+except ImportError:
+    fcntl = None
 import os
 import tempfile
 import time
@@ -156,5 +161,14 @@ def main():
         print("Processes:       producer + consumer")
 
 
+class TestMultiprocessMmap(unittest.TestCase):
+    @unittest.skipIf(
+        fcntl is None,
+        "fcntl is unavailable on this platform",
+    )
+    def test_multiprocess_producer_consumer(self):
+        main()
+
+
 if __name__ == "__main__":
-    main()
+    unittest.main(verbosity=2)

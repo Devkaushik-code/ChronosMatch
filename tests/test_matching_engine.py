@@ -65,6 +65,38 @@ class TestMatchingEngine(unittest.TestCase):
     def test_invalid_quantity_rejected(self):
         with self.assertRaises(ValueError):
             self.engine.submit_order(1, "BUY", 100, 0)
+
+    def test_buy_matches_multiple_ask_price_levels(self):
+        self.engine.submit_order(1, "SELL", 101, 2)
+        self.engine.submit_order(2, "SELL", 102, 3)
+        self.engine.submit_order(3, "SELL", 103, 4)
+
+        trades = self.engine.submit_order(4, "BUY", 102, 5)
+
+        self.assertEqual(len(trades), 2)
+        self.assertEqual(
+            [(t.sell_order_id, t.price, t.quantity) for t in trades],
+            [(1, 101, 2), (2, 102, 3)],
+        )
+        self.assertEqual(self.engine.best_ask(), 103)
+        self.assertEqual(self.engine.asks[103][0].quantity, 4)
+
+    def test_sell_matches_multiple_bid_price_levels(self):
+        self.engine.submit_order(1, "BUY", 103, 2)
+        self.engine.submit_order(2, "BUY", 102, 3)
+        self.engine.submit_order(3, "BUY", 101, 4)
+
+        trades = self.engine.submit_order(4, "SELL", 102, 5)
+
+        self.assertEqual(len(trades), 2)
+        self.assertEqual(
+            [(t.buy_order_id, t.price, t.quantity) for t in trades],
+            [(1, 103, 2), (2, 102, 3)],
+        )
+        self.assertEqual(self.engine.best_bid(), 101)
+        self.assertEqual(self.engine.bids[101][0].quantity, 4)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
   

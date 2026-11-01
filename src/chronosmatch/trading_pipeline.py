@@ -39,8 +39,11 @@ async def run_trading_pipeline(
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
 
-    simulator = simulator or MarketSimulator()
-    engine = engine or MatchingEngine()
+    if simulator is None:
+        simulator = MarketSimulator()
+
+    if engine is None:
+        engine = MatchingEngine()
     processed = 0
 
     async for order_id, price, quantity in simulator.generate_orders(

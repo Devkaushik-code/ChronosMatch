@@ -97,6 +97,39 @@ class TestTradingPipeline(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(ledger.count_trades(), 0)
 
 
+    async def test_preserves_falsey_supplied_simulator(self):
+        class FalseySimulator(MarketSimulator):
+            def __bool__(self):
+                return False
+
+            async def generate_orders(self, count, batch_size=1000):
+                self.was_used = True
+                if False:
+                    yield (0, 0, 0)
+
+        simulator = FalseySimulator()
+        simulator.was_used = False
+
+        await run_trading_pipeline(count=0, simulator=simulator)
+
+        self.assertTrue(simulator.was_used)
+
+    async def test_preserves_falsey_supplied_engine(self):
+        class FalseyEngine(MatchingEngine):
+            def __bool__(self):
+                return False
+
+            def submit_order(self, *args, **kwargs):
+                self.was_used = True
+                return super().submit_order(*args, **kwargs)
+
+        engine = FalseyEngine()
+        engine.was_used = False
+
+        await run_trading_pipeline(count=1, engine=engine)
+
+        self.assertTrue(engine.was_used)
+
     async def test_collects_order_processing_latencies(self):
         latencies = []
 

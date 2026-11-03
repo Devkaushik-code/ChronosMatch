@@ -218,3 +218,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ChronosMatch private dashboard data
+web_dashboard/users.db
+web_dashboard/user_data/
+web_dashboard/.env
+web_dashboard/*.db
+web_dashboard/*.db-journal
+web_dashboard/*.db-wal
+web_dashboard/*.db-shm
+web_dashboard/.secret_key

@@ -131,6 +131,22 @@ class MatchingEngine:
             if not queue:
                 del self.bids[best_bid]
 
+    def cancel_order(self, order_id: int) -> bool:
+        """Cancel an open order by ID without disturbing other orders."""
+
+        for book in (self.bids, self.asks):
+            for price, queue in list(book.items()):
+                for index, order in enumerate(queue):
+                    if order.order_id == order_id:
+                        del queue[index]
+
+                        if not queue:
+                            del book[price]
+
+                        return True
+
+        return False
+
     def best_bid(self):
         """Return the best bid price, or None if there are no bids."""
         return max(self.bids) if self.bids else None

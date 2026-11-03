@@ -97,6 +97,44 @@ class TestMatchingEngine(unittest.TestCase):
         self.assertEqual(self.engine.bids[101][0].quantity, 4)
 
 
+    def test_cancel_open_sell_order(self):
+        self.engine.submit_order(1, "SELL", 100, 5)
+
+        self.assertTrue(self.engine.cancel_order(1))
+        self.assertIsNone(self.engine.best_ask())
+
+    def test_cancel_open_buy_order(self):
+        self.engine.submit_order(1, "BUY", 100, 5)
+
+        self.assertTrue(self.engine.cancel_order(1))
+        self.assertIsNone(self.engine.best_bid())
+
+    def test_cancel_partially_filled_order(self):
+        self.engine.submit_order(1, "SELL", 100, 10)
+        self.engine.submit_order(2, "BUY", 100, 4)
+
+        self.assertTrue(self.engine.cancel_order(1))
+        self.assertIsNone(self.engine.best_ask())
+        self.assertEqual(len(self.engine.trades), 1)
+
+    def test_cancel_nonexistent_order(self):
+        self.assertFalse(self.engine.cancel_order(999))
+
+    def test_cancel_preserves_other_orders_priority(self):
+        self.engine.submit_order(1, "SELL", 100, 2)
+        self.engine.submit_order(2, "SELL", 100, 3)
+        self.engine.submit_order(3, "SELL", 100, 4)
+
+        self.assertTrue(self.engine.cancel_order(2))
+
+        trades = self.engine.submit_order(4, "BUY", 100, 6)
+
+        self.assertEqual(
+            [(t.sell_order_id, t.quantity) for t in trades],
+            [(1, 2), (3, 4)],
+        )
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
   

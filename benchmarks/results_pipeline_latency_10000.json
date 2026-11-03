@@ -1,0 +1,138 @@
+{
+  "benchmark": "ChronosMatch end-to-end trading pipeline",
+  "timestamp_utc": "2026-10-15T04:38:10.802896+00:00",
+  "environment": {
+    "python_version": "3.12.15 (main, Oct  1 2026, 09:33:41) [GCC 14.2.0]",
+    "python_implementation": "CPython",
+    "platform": "Linux-5.15.194-android13-8-00019-gf4321180a397-ab15212794-aarch64-with",
+    "machine": "aarch64",
+    "processor": "Not reported"
+  },
+  "orders_per_run": 10000,
+  "batch_size": 1000,
+  "runs": 5,
+  "warmup_runs": 1,
+  "results": [
+    {
+      "orders_requested": 10000,
+      "orders_processed": 10000,
+      "trades_executed": 7906,
+      "total_pipeline_latency_ms": 77.042,
+      "average_pipeline_time_per_order_us": 7.704,
+      "throughput_orders_per_second": 129800.11,
+      "individual_order_processing_latency_us": {
+        "samples": 10000,
+        "mean": 4.572,
+        "median": 3.0,
+        "p50": 3.0,
+        "p95": 8.539,
+        "p99": 13.0,
+        "maximum": 1639.615
+      },
+      "best_bid": 2502,
+      "best_ask": 2503,
+      "run": 1
+    },
+    {
+      "orders_requested": 10000,
+      "orders_processed": 10000,
+      "trades_executed": 7906,
+      "total_pipeline_latency_ms": 76.431,
+      "average_pipeline_time_per_order_us": 7.643,
+      "throughput_orders_per_second": 130836.31,
+      "individual_order_processing_latency_us": {
+        "samples": 10000,
+        "mean": 4.521,
+        "median": 3.0,
+        "p50": 3.0,
+        "p95": 8.539,
+        "p99": 13.002,
+        "maximum": 1192.231
+      },
+      "best_bid": 2502,
+      "best_ask": 2503,
+      "run": 2
+    },
+    {
+      "orders_requested": 10000,
+      "orders_processed": 10000,
+      "trades_executed": 7906,
+      "total_pipeline_latency_ms": 76.14,
+      "average_pipeline_time_per_order_us": 7.614,
+      "throughput_orders_per_second": 131337.01,
+      "individual_order_processing_latency_us": {
+        "samples": 10000,
+        "mean": 4.471,
+        "median": 3.0,
+        "p50": 3.0,
+        "p95": 8.538,
+        "p99": 12.848,
+        "maximum": 772.385
+      },
+      "best_bid": 2502,
+      "best_ask": 2503,
+      "run": 3
+    },
+    {
+      "orders_requested": 10000,
+      "orders_processed": 10000,
+      "trades_executed": 7906,
+      "total_pipeline_latency_ms": 78.345,
+      "average_pipeline_time_per_order_us": 7.835,
+      "throughput_orders_per_second": 127640.19,
+      "individual_order_processing_latency_us": {
+        "samples": 10000,
+        "mean": 4.695,
+        "median": 3.0,
+        "p50": 3.0,
+        "p95": 8.615,
+        "p99": 12.923,
+        "maximum": 2582.539
+      },
+      "best_bid": 2502,
+      "best_ask": 2503,
+      "run": 4
+    },
+    {
+      "orders_requested": 10000,
+      "orders_processed": 10000,
+      "trades_executed": 7906,
+      "total_pipeline_latency_ms": 78.666,
+      "average_pipeline_time_per_order_us": 7.867,
+      "throughput_orders_per_second": 127120.47,
+      "individual_order_processing_latency_us": {
+        "samples": 10000,
+        "mean": 4.722,
+        "median": 3.0,
+        "p50": 3.0,
+        "p95": 8.385,
+        "p99": 12.846,
+        "maximum": 3402.847
+      },
+      "best_bid": 2502,
+      "best_ask": 2503,
+      "run": 5
+    }
+  ],
+  "summary": {
+    "mean_pipeline_latency_ms": 77.325,
+    "median_pipeline_latency_ms": 77.042,
+    "p50_pipeline_latency_ms": 77.042,
+    "p95_pipeline_latency_ms": 78.602,
+    "p99_pipeline_latency_ms": 78.653,
+    "mean_throughput_orders_per_second": 129346.82,
+    "mean_individual_order_processing_latency_us": 4.596,
+    "median_run_order_p50_latency_us": 3.0,
+    "median_run_order_p95_latency_us": 8.539,
+    "median_run_order_p99_latency_us": 12.923
+  },
+  "notes": [
+    "Total pipeline time includes order generation and matching.",
+    "Individual-order processing latency starts after an order is yielded by the simulator and ends after matching and any trade persistence.",
+    "Individual-order latency excludes simulator generation and waiting time.",
+    "The summary's order percentiles are medians of the per-run percentiles.",
+    "SQLite persistence is not included unless a ledger is supplied.",
+    "Multiprocess IPC is not included.",
+    "Results depend on the runtime environment and system load."
+  ]
+}

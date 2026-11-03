@@ -1,0 +1,137 @@
+{
+  "benchmark": "ChronosMatch Python vs Cython matching engines",
+  "timestamp_utc": "2026-10-13T05:31:56.811618+00:00",
+  "environment": {
+    "python_version": "3.12.15 (main, Oct  1 2026, 09:33:41) [GCC 14.2.0]",
+    "python_implementation": "CPython",
+    "platform": "Linux-5.15.194-android13-8-00019-gf4321180a397-ab15212794-aarch64-with",
+    "machine": "aarch64",
+    "processor": "Not reported"
+  },
+  "workload": {
+    "orders_per_run": 2000,
+    "seed": 42,
+    "runs": 3,
+    "warmup_runs": 1
+  },
+  "correctness": {
+    "all_runs_passed_parity": true,
+    "compared": [
+      "trades",
+      "remaining bid and ask books",
+      "remaining order quantities and timestamps",
+      "best bid",
+      "best ask"
+    ]
+  },
+  "engines": {
+    "python": {
+      "runs": [
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 12.701,
+          "throughput_orders_per_second": 157462.2,
+          "average_latency_us": 6.555,
+          "p50_latency_us": 4.616,
+          "p95_latency_us": 13.461,
+          "p99_latency_us": 20.079,
+          "run": 1
+        },
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 13.421,
+          "throughput_orders_per_second": 149020.19,
+          "average_latency_us": 6.954,
+          "p50_latency_us": 4.692,
+          "p95_latency_us": 13.846,
+          "p99_latency_us": 21.846,
+          "run": 2
+        },
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 12.869,
+          "throughput_orders_per_second": 155409.44,
+          "average_latency_us": 6.83,
+          "p50_latency_us": 4.692,
+          "p95_latency_us": 13.615,
+          "p99_latency_us": 20.926,
+          "run": 3
+        }
+      ],
+      "summary": {
+        "mean_throughput_orders_per_second": 153963.94,
+        "median_throughput_orders_per_second": 155409.44,
+        "min_throughput_orders_per_second": 149020.19,
+        "max_throughput_orders_per_second": 157462.2,
+        "stdev_throughput_orders_per_second": 3594.81,
+        "median_p50_latency_us": 4.692,
+        "median_p95_latency_us": 13.615,
+        "median_p99_latency_us": 20.926
+      }
+    },
+    "cython": {
+      "runs": [
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 14.407,
+          "throughput_orders_per_second": 138816.96,
+          "average_latency_us": 6.831,
+          "p50_latency_us": 5.154,
+          "p95_latency_us": 14.154,
+          "p99_latency_us": 20.0,
+          "run": 1
+        },
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 14.464,
+          "throughput_orders_per_second": 138274.34,
+          "average_latency_us": 7.195,
+          "p50_latency_us": 5.231,
+          "p95_latency_us": 14.769,
+          "p99_latency_us": 22.159,
+          "run": 2
+        },
+        {
+          "orders_processed": 2000,
+          "trades_executed": 1467,
+          "elapsed_ms": 14.407,
+          "throughput_orders_per_second": 138822.88,
+          "average_latency_us": 7.689,
+          "p50_latency_us": 5.231,
+          "p95_latency_us": 14.692,
+          "p99_latency_us": 23.771,
+          "run": 3
+        }
+      ],
+      "summary": {
+        "mean_throughput_orders_per_second": 138638.06,
+        "median_throughput_orders_per_second": 138816.96,
+        "min_throughput_orders_per_second": 138274.34,
+        "max_throughput_orders_per_second": 138822.88,
+        "stdev_throughput_orders_per_second": 257.2,
+        "median_p50_latency_us": 5.231,
+        "median_p95_latency_us": 14.692,
+        "median_p99_latency_us": 22.159
+      }
+    }
+  },
+  "comparison": {
+    "cython_to_python_mean_throughput_ratio": 0.9005,
+    "throughput_improvement_percent": -9.95
+  },
+  "notes": [
+    "Both engines receive the same pre-generated orders.",
+    "Workload generation is excluded from timing.",
+    "Engine construction is excluded from timing.",
+    "Throughput timing includes per-order latency instrumentation.",
+    "Latency measures submit_order, including timing overhead.",
+    "Warm-up runs are excluded from reported results.",
+    "Each measured run verifies identical engine state and trades.",
+    "Results depend on the runtime environment and system load."
+  ]
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronosMatch | {{ mode|title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Chronos<span>Match</span></h1>
+            <p class="auth-subtitle">Your personal trading workspace</p>
+
+            <h2>{{ 'Create your account' if mode == 'signup' else 'Welcome back' }}</h2>
+            <p class="auth-description">
+                {{ 'Register to access your individual trading dashboard.' if mode == 'signup' else 'Login to continue to your trading dashboard.' }}
+            </p>
+
+            {% if error %}
+                <div class="auth-error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for(mode) }}" class="auth-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                {% if mode == 'signup' %}
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text"
+                           minlength="3" maxlength="30" required
+                           autocomplete="username" placeholder="Choose a username">
+                {% endif %}
+
+                <label for="email">Email address</label>
+                <input id="email" name="email" type="email"
+                       maxlength="254" required autocomplete="email"
+                       placeholder="Enter your email">
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password"
+                       minlength="8" maxlength="128" required
+                       autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}"
+                       placeholder="{{ 'At least 8 characters' if mode == 'signup' else 'Enter your password' }}">
+
+                <button type="submit">
+                    {{ 'Create Account' if mode == 'signup' else 'Login' }}
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                {% if mode == 'signup' %}
+                    Already registered? <a href="{{ url_for('login') }}">Login</a>
+                {% else %}
+                    New to ChronosMatch? <a href="{{ url_for('signup') }}">Create an account</a>
+                {% endif %}
+            </p>
+        </section>
+    </main>
+</body>
+</html>

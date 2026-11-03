@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="theme-color" content="#080d18">
+    <title>ChronosMatch | Trading Terminal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="terminal-page">
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-mark">C</div>
+        <div>
+            <h1>Chronos<span>Match</span></h1>
+            <p>PROFESSIONAL TRADING TERMINAL</p>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <div class="market-indicator">
+            <span class="live-dot"></span>
+            <span id="connectionStatus">Connecting...</span>
+        </div>
+        <div class="account-area">
+            <span class="username">{{ username }}</span>
+            <form method="POST" action="{{ url_for('logout') }}" class="logout-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="terminal-container">
+
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">MARKET OVERVIEW</span>
+            <h2>Trading Terminal</h2>
+            <p>Monitor orders, liquidity and matching engine activity.</p>
+        </div>
+        <div class="engine-pill">
+            <span class="live-dot"></span>
+            <span id="engineStatus">Checking engine...</span>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-label">ORDERS PROCESSED</span>
+            <strong id="ordersProcessed">0</strong>
+            <span class="stat-foot">Your account activity</span>
+        </article>
+
+        <article class="stat-card">
+            <span class="stat-label">EXECUTED TRADES</span>
+            <strong id="executedTrades">0</strong>
+            <span class="stat-foot">Successfully matched</span>
+        </article>
+
+        <article class="stat-card bid-card">
+            <span class="stat-label">BEST BID</span>
+            <strong id="bestBid">—</strong>
+            <span class="stat-foot">Highest pending buy price</span>
+        </article>
+
+        <article class="stat-card ask-card">
+            <span class="stat-label">BEST ASK</span>
+            <strong id="bestAsk">—</strong>
+            <span class="stat-foot">Lowest pending sell price</span>
+        </article>
+    </section>
+
+    <section class="trading-grid">
+
+        <article class="panel trading-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">ORDER EXECUTION</span>
+                    <h3>Place an Order</h3>
+                </div>
+                <span class="demo-badge">DEMO MARKET</span>
+            </div>
+
+            <div class="price-reference">
+                <div>
+                    <span class="field-caption">INDICATIVE MARKET PRICE</span>
+                    <strong id="marketPrice">₹2,500.00</strong>
+                </div>
+                <div class="price-actions">
+                    <span class="demo-label">Simulated reference</span>
+                    <button type="button" id="useMarketPriceButton" class="use-market-price">Use price</button>
+                </div>
+            </div>
+
+            <div class="market-chart">
+                <div class="chart-heading">
+                    <div>
+                        <span class="field-caption">PRICE MOVEMENT</span>
+                        <strong>Market Trend</strong>
+                    </div>
+                    <span id="priceChange" class="chart-change">0.00%</span>
+                </div>
+                <canvas id="marketChart" aria-label="Simulated market price chart"></canvas>
+                <div class="chart-footer">
+                    <span>SIMULATED MARKET DATA</span>
+                    <span id="chartCurrentPrice">₹2,500.00</span>
+                </div>
+            </div>
+
+            <form id="orderForm" class="order-form">
+                <label for="side">ORDER SIDE</label>
+                <select id="side" class="side-select">
+                    <option value="BUY">BUY — Purchase</option>
+                    <option value="SELL">SELL — Sell</option>
+                </select>
+
+                <label for="price">LIMIT PRICE (₹)</label>
+                <input id="price" type="number" min="1" step="1"
+                       value="2500" placeholder="Enter price per unit" required>
+
+                <p class="input-help">Maximum price you will pay when buying, or minimum price you will accept when selling.</p>
+
+                <label for="quantity">QUANTITY (UNITS)</label>
+                <input id="quantity" type="number" min="1" step="1"
+                       value="10" placeholder="Enter number of units" required>
+
+                <div class="order-estimate">
+                    <span>Estimated order value</span>
+                    <strong id="orderValue">₹25,000.00</strong>
+                </div>
+
+                <button type="submit" class="submit-order-button">
+                    Submit Limit Order
+                </button>
+            </form>
+
+            <p id="orderMessage" class="message"></p>
+
+            <div class="order-explainer">
+                <strong>How matching works</strong>
+                <p>Your order enters the order book. It executes when a compatible opposite order is available.</p>
+            </div>
+        </article>
+
+        <div class="market-column">
+
+            <article class="panel orderbook-panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">MARKET DEPTH</span>
+                        <h3>Live Order Book</h3>
+                    </div>
+                    <span class="panel-tag">YOUR ACCOUNT</span>
+                </div>
+
+                <div class="orderbook">
+                    <div class="book-side">
+                        <h4 class="buy-title">BUY ORDERS <span>BIDS</span></h4>
+                        <table>
+                            <thead>
+                                <tr><th>PRICE (₹)</th><th>QUANTITY</th></tr>
+                            </thead>
+                            <tbody id="bidsBody">
+                                <tr><td colspan="2" class="empty">No buy orders</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="book-side">
+                        <h4 class="sell-title">SELL ORDERS <span>ASKS</span></h4>
+                        <table>
+                            <thead>
+                                <tr><th>PRICE (₹)</th><th>QUANTITY</th></tr>
+                            </thead>
+                            <tbody id="asksBody">
+                                <tr><td colspan="2" class="empty">No sell orders</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </article>
+
+            <article class="panel open-orders-panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">ORDER MANAGEMENT</span>
+                        <h3>My Open Orders</h3>
+                    </div>
+                    <span class="panel-tag">ACTIVE ORDERS</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>SIDE</th>
+                                <th>PRICE (₹)</th>
+                                <th>REMAINING</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="openOrdersBody">
+                            <tr><td colspan="5" class="empty">No open orders</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p id="cancelMessage" class="message"></p>
+            </article>
+
+            <article class="panel trades-panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">EXECUTION RECORDS</span>
+                        <h3>Recent Trades</h3>
+                    </div>
+                    <span class="panel-tag">TRADE HISTORY</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>BUY ORDER</th>
+                                <th>SELL ORDER</th>
+                                <th>PRICE</th>
+                                <th>QTY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesBody">
+                            <tr><td colspan="4" class="empty">No executed trades yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <section class="bottom-grid">
+
+        <article class="panel simulator-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">PIPELINE TESTING</span>
+                    <h3>Market Simulation</h3>
+                </div>
+                <span class="panel-tag">ASYNC ENGINE</span>
+            </div>
+
+            <p>Generate simulated buy and sell orders to test the matching engine.</p>
+
+            <label for="simulationCount">NUMBER OF SIMULATED ORDERS</label>
+            <div class="simulator-controls">
+                <input id="simulationCount" type="number"
+                       min="1" max="10000" value="100">
+                <button id="simulateButton" type="button">Run Simulation</button>
+            </div>
+            <p id="simulationMessage" class="message"></p>
+        </article>
+
+        <article class="panel benchmark-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">PERFORMANCE ANALYTICS</span>
+                    <h3>Benchmark Results</h3>
+                </div>
+                <span class="panel-tag">ENGINE METRICS</span>
+            </div>
+
+            <p>Performance results from the project's benchmark JSON files.</p>
+            <div id="benchmarkResults">Loading benchmark results...</div>
+        </article>
+
+    </section>
+
+    <section class="notice">
+        <strong>DEVELOPMENT ENVIRONMENT</strong>
+        <p>ChronosMatch uses simulated market data. It is not connected to a real stock exchange or brokerage.</p>
+        <p>Live order book state is currently held in memory and resets when the server restarts. Trade history is stored separately for each account.</p>
+    </section>
+
+</main>
+
+<footer>
+    <span>CHRONOSMATCH</span>
+    <span>Python Matching Engine · Development Build</span>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>

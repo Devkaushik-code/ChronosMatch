@@ -1,0 +1,258 @@
+{
+  "benchmark": "ChronosMatch three-way matching-engine comparison",
+  "timestamp_utc": "2026-10-14T16:11:18.431932+00:00",
+  "environment": {
+    "python_version": "3.12.15 (main, Oct  1 2026, 09:33:41) [GCC 14.2.0]",
+    "python_implementation": "CPython",
+    "platform": "Linux-5.15.194-android13-8-00019-gf4321180a397-ab15212794-aarch64-with",
+    "machine": "aarch64"
+  },
+  "workload": {
+    "orders_per_run": 20000,
+    "seed": 42,
+    "runs": 5,
+    "warmup_runs": 1
+  },
+  "correctness": {
+    "all_runs_passed_parity": true,
+    "compared": [
+      "trades",
+      "remaining bid and ask books",
+      "remaining order quantities and timestamps",
+      "best bid",
+      "best ask"
+    ]
+  },
+  "engines": {
+    "python": {
+      "runs": [
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 118.012,
+          "throughput_orders_per_second": 169473.96,
+          "average_latency_us": 5.745,
+          "p50_latency_us": 3.77,
+          "p95_latency_us": 11.307,
+          "p99_latency_us": 16.695,
+          "run": 1
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 115.989,
+          "throughput_orders_per_second": 172430.26,
+          "average_latency_us": 5.651,
+          "p50_latency_us": 3.77,
+          "p95_latency_us": 11.154,
+          "p99_latency_us": 16.385,
+          "run": 2
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 118.324,
+          "throughput_orders_per_second": 169027.09,
+          "average_latency_us": 5.588,
+          "p50_latency_us": 3.923,
+          "p95_latency_us": 11.308,
+          "p99_latency_us": 16.615,
+          "run": 3
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 117.138,
+          "throughput_orders_per_second": 170739.01,
+          "average_latency_us": 6.794,
+          "p50_latency_us": 3.77,
+          "p95_latency_us": 11.307,
+          "p99_latency_us": 16.307,
+          "run": 4
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 117.433,
+          "throughput_orders_per_second": 170309.43,
+          "average_latency_us": 6.716,
+          "p50_latency_us": 3.769,
+          "p95_latency_us": 11.154,
+          "p99_latency_us": 16.0,
+          "run": 5
+        }
+      ],
+      "summary": {
+        "mean_throughput_orders_per_second": 170395.95,
+        "median_throughput_orders_per_second": 170309.43,
+        "min_throughput_orders_per_second": 169027.09,
+        "max_throughput_orders_per_second": 172430.26,
+        "stdev_throughput_orders_per_second": 1182.15,
+        "median_p50_latency_us": 3.77,
+        "median_p95_latency_us": 11.307,
+        "median_p99_latency_us": 16.385
+      }
+    },
+    "cython_original": {
+      "runs": [
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 122.902,
+          "throughput_orders_per_second": 162731.49,
+          "average_latency_us": 5.941,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 11.385,
+          "p99_latency_us": 16.846,
+          "run": 1
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 134.232,
+          "throughput_orders_per_second": 148995.51,
+          "average_latency_us": 6.328,
+          "p50_latency_us": 4.307,
+          "p95_latency_us": 11.923,
+          "p99_latency_us": 20.079,
+          "run": 2
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 133.633,
+          "throughput_orders_per_second": 149663.72,
+          "average_latency_us": 6.003,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 11.384,
+          "p99_latency_us": 16.615,
+          "run": 3
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 123.38,
+          "throughput_orders_per_second": 162100.32,
+          "average_latency_us": 5.962,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 11.308,
+          "p99_latency_us": 16.0,
+          "run": 4
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 124.693,
+          "throughput_orders_per_second": 160394.03,
+          "average_latency_us": 5.954,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 11.308,
+          "p99_latency_us": 16.307,
+          "run": 5
+        }
+      ],
+      "summary": {
+        "mean_throughput_orders_per_second": 156777.01,
+        "median_throughput_orders_per_second": 160394.03,
+        "min_throughput_orders_per_second": 148995.51,
+        "max_throughput_orders_per_second": 162731.49,
+        "stdev_throughput_orders_per_second": 6132.32,
+        "median_p50_latency_us": 4.231,
+        "median_p95_latency_us": 11.384,
+        "median_p99_latency_us": 16.615
+      }
+    },
+    "cython_optimized": {
+      "runs": [
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 123.407,
+          "throughput_orders_per_second": 162065.66,
+          "average_latency_us": 5.82,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 10.846,
+          "p99_latency_us": 15.462,
+          "run": 1
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 127.221,
+          "throughput_orders_per_second": 157207.22,
+          "average_latency_us": 7.009,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 10.846,
+          "p99_latency_us": 15.769,
+          "run": 2
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 121.095,
+          "throughput_orders_per_second": 165158.96,
+          "average_latency_us": 5.959,
+          "p50_latency_us": 4.231,
+          "p95_latency_us": 10.846,
+          "p99_latency_us": 15.923,
+          "run": 3
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 123.918,
+          "throughput_orders_per_second": 161397.25,
+          "average_latency_us": 6.023,
+          "p50_latency_us": 4.307,
+          "p95_latency_us": 11.077,
+          "p99_latency_us": 16.077,
+          "run": 4
+        },
+        {
+          "orders_processed": 20000,
+          "trades_executed": 14994,
+          "elapsed_ms": 133.566,
+          "throughput_orders_per_second": 149738.62,
+          "average_latency_us": 6.408,
+          "p50_latency_us": 4.307,
+          "p95_latency_us": 11.154,
+          "p99_latency_us": 17.539,
+          "run": 5
+        }
+      ],
+      "summary": {
+        "mean_throughput_orders_per_second": 159113.54,
+        "median_throughput_orders_per_second": 161397.25,
+        "min_throughput_orders_per_second": 149738.62,
+        "max_throughput_orders_per_second": 165158.96,
+        "stdev_throughput_orders_per_second": 5329.18,
+        "median_p50_latency_us": 4.231,
+        "median_p95_latency_us": 10.846,
+        "median_p99_latency_us": 15.923
+      }
+    }
+  },
+  "comparisons_vs_python": {
+    "cython_original": {
+      "throughput_ratio_vs_python": 0.9201,
+      "throughput_change_percent_vs_python": -7.99
+    },
+    "cython_optimized": {
+      "throughput_ratio_vs_python": 0.9338,
+      "throughput_change_percent_vs_python": -6.62
+    }
+  },
+  "optimized_vs_original_cython": {
+    "throughput_ratio": 1.0149,
+    "throughput_change_percent": 1.49
+  },
+  "notes": [
+    "All engines receive the same pre-generated deterministic orders.",
+    "Workload generation and engine construction are excluded from throughput timing.",
+    "Throughput and per-order latency are measured in separate passes.",
+    "Warm-up measurements are excluded from reported results.",
+    "Execution order rotates between measured runs.",
+    "Every run compares trades and final order-book state.",
+    "Results may vary with system load and runtime conditions."
+  ]
+}
